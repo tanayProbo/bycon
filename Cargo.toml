@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "protocol",
+    "node",
+    "wallet",
+    "cli"
+]
+resolver = "2"

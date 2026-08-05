@@ -1,0 +1,14 @@
+# Normalize line endings to LF for all text files
+* text=auto eol=lf
+
+# Force LF for Rust source files
+*.rs text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.gif binary
