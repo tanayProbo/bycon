@@ -10,3 +10,5 @@ rlp-derive = "0.1"
 secp256k1 = { version = "0.27", features = ["recovery", "global-context"] }
 ethereum-types = "0.14"
 thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
