@@ -1,10 +1,12 @@
 use crate::hash::{keccak256, Hash};
 use crate::transaction::{Address, Transaction};
 use rlp_derive::{RlpDecodable, RlpEncodable};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
+#[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable, Serialize, Deserialize)]
 pub struct BlockHeader {
     pub parent_hash: Hash,
+    pub number: u64,
     pub state_root: Hash,
     pub transactions_root: Hash,
     pub receipts_root: Hash,
@@ -19,7 +21,7 @@ impl BlockHeader {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
+#[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable, Serialize, Deserialize)]
 pub struct Block {
     pub header: BlockHeader,
     pub transactions: Vec<Transaction>,
