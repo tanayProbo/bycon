@@ -4,6 +4,7 @@ mod network;
 mod state;
 mod mempool;
 mod consensus;
+mod execution;
 
 use protocol::genesis;
 use chain::Blockchain;
