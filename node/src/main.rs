@@ -6,6 +6,7 @@ mod mempool;
 mod consensus;
 mod execution;
 mod miner;
+mod rpc;
 
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -52,6 +53,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         state_db.clone(),
         Address::from_low_u64_be(1) // dummy coinbase
     );
+
+    // Start RPC Server
+    let _rpc_addr = rpc::start_server(
+        blockchain.clone(),
+        mempool.clone(),
+        state_db.clone()
+    ).await?;
 
     // Run miner in background
     tokio::spawn(async move {
