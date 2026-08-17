@@ -1,11 +1,7 @@
-//! Transaction execution engine.
-//!
-//! Applies transactions to the state database. Without a full EVM, this handles
-//! standard balance transfers, nonce increments, and basic gas accounting.
-
 use protocol::transaction::{Address, Transaction};
 use protocol::receipt::Receipt;
 use crate::state::{StateDb, StateError};
+use crate::evm::Evm;
 use ethereum_types::U256;
 use thiserror::Error;
 
@@ -98,9 +94,11 @@ impl<'a> ExecutionEngine<'a> {
             recipient_acc.balance += tx.value;
             self.state.put_account(&to, &recipient_acc)?;
         } else {
-            // Contract creation stub: 
-            // In a real EVM, we would deploy the bytecode in `tx.data` and create an address.
-            // For now, we just burn the value.
+        let mut contract_address = None;
+        if !tx.data.is_empty() || tx.to.is_none() {
+            let evm = Evm::new(self.state);
+            contract_address = evm.execute_contract(&sender, tx.to.as_ref(), &tx.data)?;
+        }
         }
 
         // 7. Gas refunds and miner reward

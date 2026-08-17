@@ -5,6 +5,7 @@ mod state;
 mod mempool;
 mod consensus;
 mod execution;
+mod evm;
 mod miner;
 mod rpc;
 
