@@ -1,8 +1,14 @@
-[package]
+﻿[package]
 name = "cli"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "bycon-cli"
+path = "src/main.rs"
+
 [dependencies]
-node = { path = "../node" }
-wallet = { path = "../wallet" }
+secp256k1 = { version = "0.27", features = ["rand-std", "recovery", "global-context"] }
+tiny-keccak = { version = "2.0", features = ["keccak"] }
+rand = "0.8"
+hex = "0.4"
