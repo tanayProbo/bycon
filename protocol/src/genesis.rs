@@ -7,6 +7,7 @@ pub fn get_genesis_block() -> Block {
         header: BlockHeader {
             parent_hash: Hash::zero(),
             number: 0,
+            nonce: 0,
             state_root: Hash::zero(),
             transactions_root: Hash::zero(),
             receipts_root: Hash::zero(),

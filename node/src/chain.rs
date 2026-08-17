@@ -10,6 +10,7 @@ pub enum ChainError {
     #[error("Database error: {0}")] Db(#[from] sled::Error),
     #[error("Serialization error: {0}")] Serde(#[from] bincode::Error),
     #[error("Block not found")] BlockNotFound,
+    #[error("Invalid Proof of Work")] InvalidPoW,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -37,6 +38,12 @@ impl Blockchain {
     }
 
     pub fn append_block(&self, block: &Block) -> Result<(), ChainError> {
+        // PoW Validation
+        let hash = block.hash();
+        if hash.as_bytes()[0] != 0 {
+            return Err(ChainError::InvalidPoW);
+        }
+
         let height = block.header.number;
         let record = BlockRecord { block: block.clone() };
         let bytes = bincode::serialize(&record)?;

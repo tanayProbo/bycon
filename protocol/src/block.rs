@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 pub struct BlockHeader {
     pub parent_hash: Hash,
     pub number: u64,
+    pub nonce: u64,
     pub state_root: Hash,
     pub transactions_root: Hash,
     pub receipts_root: Hash,
