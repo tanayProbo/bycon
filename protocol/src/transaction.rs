@@ -58,7 +58,7 @@ impl Transaction {
     /// Sign the transaction using secp256k1 and optionally EIP-155 chain_id.
     pub fn sign(&mut self, secret_key: &SecretKey, chain_id: Option<u64>) -> Result<(), secp256k1::Error> {
         let hash = self.hash_for_signing(chain_id);
-        let msg = Message::from_digest_slice(hash.as_bytes())?;
+        let msg = Message::from_slice(hash.as_bytes())?;
         
         let secp = Secp256k1::signing_only();
         let sig = secp.sign_ecdsa_recoverable(&msg, secret_key);
@@ -88,7 +88,7 @@ impl Transaction {
         };
 
         let hash = self.hash_for_signing(chain_id);
-        let msg = Message::from_digest_slice(hash.as_bytes())?;
+        let msg = Message::from_slice(hash.as_bytes())?;
 
         let rec_id = RecoveryId::from_i32(rec_id_val as i32)?;
         
