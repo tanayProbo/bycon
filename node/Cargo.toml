@@ -16,6 +16,9 @@ bincode = "1.3"
 jsonrpsee = { version = "0.20", features = ["server", "macros"] }
 hex = "0.4.3"
 libp2p = { version = "0.52", features = ["tokio", "gossipsub", "mdns", "noise", "yamux", "tcp", "macros"] }
+ethereum-types = "0.16.0"
+rlp = "0.6.1"
+secp256k1 = "0.33.1"
 
 [dev-dependencies]
 tokio = { version = "1.28", features = ["full"] }

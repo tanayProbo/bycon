@@ -1,6 +1,6 @@
 use protocol::block::Block;
-use protocol::hash::H256;
-use protocol::account::Address;
+use primitive_types::H256;
+use protocol::transaction::Address;
 
 /// Represents the current state of the BFT consensus engine for a given height.
 #[derive(Debug, Clone, PartialEq)]
