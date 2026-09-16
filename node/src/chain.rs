@@ -11,6 +11,7 @@ pub enum ChainError {
     #[error("Serialization error: {0}")] Serde(#[from] bincode::Error),
     #[error("Block not found")] BlockNotFound,
     #[error("Invalid Proof of Work")] InvalidPoW,
+    #[error("State error: {0}")] State(#[from] crate::state::StateError),
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -63,7 +64,7 @@ impl Blockchain {
     }
 
     pub fn latest_height(&self) -> Result<u64, ChainError> {
-        if let Some((key, _)) = self.db.iter().rev().next() {
+        if let Some(Ok((key, _))) = self.db.iter().rev().next() {
             let h_bytes = &key[4..]; // skip "blk_"
             let mut arr = [0u8; 8];
             arr.copy_from_slice(h_bytes);

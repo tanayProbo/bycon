@@ -45,7 +45,7 @@ impl Miner {
         let state_db = self.state_db.lock().await;
         
         // Skip mining if mempool is empty to save CPU for demo
-        if mempool.count() == 0 {
+        if mempool.is_empty() {
             return;
         }
 
