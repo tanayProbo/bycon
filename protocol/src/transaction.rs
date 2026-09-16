@@ -5,6 +5,7 @@ use secp256k1::{
     ecdsa::{RecoverableSignature, RecoveryId},
     Message, Secp256k1, SecretKey,
 };
+use serde::{Deserialize, Serialize};
 
 pub type Address = H160;
 
@@ -15,7 +16,7 @@ pub struct Signature {
     pub s: U256,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
+#[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable, Serialize, Deserialize)]
 pub struct Transaction {
     pub nonce: u64,
     pub gas_price: U256,
