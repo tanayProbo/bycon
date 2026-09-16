@@ -1,5 +1,5 @@
 use protocol::block::Block;
-use primitive_types::H256;
+use ethereum_types::H256;
 use protocol::transaction::Address;
 
 /// Represents the current state of the BFT consensus engine for a given height.
