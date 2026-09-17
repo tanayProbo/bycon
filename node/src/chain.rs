@@ -39,10 +39,12 @@ impl Blockchain {
     }
 
     pub fn append_block(&self, block: &Block) -> Result<(), ChainError> {
-        // PoW Validation
-        let hash = block.hash();
-        if hash.as_bytes()[0] != 0 {
-            return Err(ChainError::InvalidPoW);
+        // Skip PoW check for genesis block (height 0)
+        if block.header.number > 0 {
+            let hash = block.hash();
+            if hash.as_bytes()[0] != 0 {
+                return Err(ChainError::InvalidPoW);
+            }
         }
 
         let height = block.header.number;
