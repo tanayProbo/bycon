@@ -53,7 +53,7 @@ fn main() {
     // Build a sample signed transaction (send 0 BYC to zero address, chain_id=1)
     let mut tx = Transaction {
         nonce: 0,
-        gas_price: U256::from(1_000_000_000u64), // 1 gwei
+        gas_price: U256::zero(), // 0 gwei so we don't need initial balance
         gas_limit: 21_000,
         to: Some(Address::from_low_u64_be(1)),   // send to address 0x1
         value: U256::from(0u64),
