@@ -30,8 +30,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _ = std::fs::create_dir_all(db_path);
     
     // We share the Blockchain and StateDb via Arc<Mutex>
-    let state_db = Arc::new(Mutex::new(StateDb::new(db_path)?));
-    let blockchain = Arc::new(Mutex::new(Blockchain::new(db_path)?));
+    let state_db = Arc::new(Mutex::new(StateDb::new("node/db/state")?));
+    let blockchain = Arc::new(Mutex::new(Blockchain::new("node/db/chain")?));
 
     {
         let chain = blockchain.lock().await;
