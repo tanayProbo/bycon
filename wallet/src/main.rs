@@ -44,10 +44,37 @@ fn keccak256(data: &[u8]) -> [u8; 32] {
 
 fn main() {
     let wallet = Wallet::generate();
+    let secret_hex = hex::encode(wallet.secret_bytes());
     println!("BYCON Wallet");
     println!("  Address : 0x{:x}", wallet.address);
-    println!("  Secret  : 0x{}", hex::encode(wallet.secret_bytes()));
-    println!("Use `bycon-cli wallet new` to generate a wallet.");
+    println!("  Secret  : 0x{}", secret_hex);
+    println!();
+
+    // Build a sample signed transaction (send 0 BYC to zero address, chain_id=1)
+    let mut tx = Transaction {
+        nonce: 0,
+        gas_price: U256::from(1_000_000_000u64), // 1 gwei
+        gas_limit: 21_000,
+        to: Some(Address::from_low_u64_be(1)),   // send to address 0x1
+        value: U256::from(0u64),
+        data: vec![],
+        v: 0, r: U256::zero(), s: U256::zero(),
+    };
+    wallet.sign_transaction(&mut tx, Some(1)).expect("signing failed");
+
+    let rlp_bytes = rlp::encode(&tx);
+    let rlp_hex = hex::encode(&rlp_bytes);
+
+    println!("Signed Transaction (RLP hex):");
+    println!("  0x{}", rlp_hex);
+    println!();
+    println!("Send it to the node:");
+    println!(
+        r#"  curl -s -X POST http://localhost:8545 \
+    -H "Content-Type: application/json" \
+    -d '{{"jsonrpc":"2.0","method":"eth_sendRawTransaction","params":["0x{}"],"id":1}}'"#,
+        rlp_hex
+    );
 }
 
 #[cfg(test)]
