@@ -1,6 +1,6 @@
-# Contributing to BYCON
+# Contributing to BYCONN
 
-Thank you for your interest in contributing to BYCON!
+Thank you for your interest in contributing to BYCONN!
 
 ## Development Environment
 - Primary language: Rust

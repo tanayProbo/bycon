@@ -9,7 +9,7 @@ use tracing::{info, warn};
 use tokio::time::sleep;
 
 #[derive(NetworkBehaviour)]
-struct ByconBehaviour {
+struct ByconnBehaviour {
     gossipsub: gossipsub::Behaviour,
     mdns: mdns::tokio::Behaviour,
 }

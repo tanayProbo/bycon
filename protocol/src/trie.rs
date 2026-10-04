@@ -1,4 +1,4 @@
-//! Merkle root utilities for BYCON block construction.
+//! Merkle root utilities for BYCONN block construction.
 //!
 //! Phase 1 uses a simplified flat Merkle tree:
 //! - RLP-encode each item
@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn test_single_item_root() {
-        let data = b"hello bycon".to_vec();
+        let data = b"hello byconn".to_vec();
         let root = merkle_root(&[data.clone()]);
         // Single item: root == keccak256(item)
         assert_eq!(root, keccak256(&data));

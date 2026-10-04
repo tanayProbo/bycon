@@ -1,10 +1,10 @@
-﻿[package]
+[package]
 name = "cli"
 version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "bycon-cli"
+name = "byconn-cli"
 path = "src/main.rs"
 
 [dependencies]

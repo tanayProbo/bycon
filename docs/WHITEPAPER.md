@@ -1,10 +1,10 @@
-# BYCON Protocol Specification & Whitepaper
+# BYCONN Protocol Specification & Whitepaper
 
 ## 1. Vision
-The BYCON blockchain aims to solve the blockchain trilemma by providing a highly scalable, secure, and decentralized infrastructure. Through an optimized Proof-of-Stake (PoS) BFT consensus engine and an EVM-compatible execution layer, BYCON supports high-throughput decentralized applications (dApps) without compromising on censorship resistance and network security.
+The BYCONN blockchain aims to solve the blockchain trilemma by providing a highly scalable, secure, and decentralized infrastructure. Through an optimized Proof-of-Stake (PoS) BFT consensus engine and an EVM-compatible execution layer, BYCONN supports high-throughput decentralized applications (dApps) without compromising on censorship resistance and network security.
 
 ## 2. Native Coin
-The native cryptocurrency of the BYCON network is the **BYC** coin.
+The native cryptocurrency of the BYCONN network is the **BYC** coin.
 **Utility of BYC**:
 - **Gas Fees**: Used to pay for transaction execution and smart contract interactions.
 - **Staking**: Bonded by validators and delegators to secure the network.
@@ -21,13 +21,13 @@ The native cryptocurrency of the BYCON network is the **BYC** coin.
 - **Deflationary Mechanism**: A portion of the base transaction fee is permanently burned, applying deflationary pressure as network usage increases.
 
 ## 4. Consensus
-BYCON utilizes a Byzantine Fault Tolerant (BFT) Proof-of-Stake consensus mechanism.
+BYCONN utilizes a Byzantine Fault Tolerant (BFT) Proof-of-Stake consensus mechanism.
 - **Finality**: Single-slot finality. A block is finalized once >2/3 of validator voting power signs it.
 - **Block Time**: Approximately 3 seconds.
 - **Rounds**: A proposer is pseudo-randomly selected based on stake weight. If a proposer fails to produce a block, a timeout triggers a view change to the next proposer.
 
 ## 5. Block Structure
-A BYCON block consists of:
+A BYCONN block consists of:
 - **Header**:
   - `parent_hash`: Hash of the previous block.
   - `state_root`: Merkle-Patricia tree root of the state database.
@@ -56,7 +56,7 @@ Validators are node operators responsible for proposing and finalizing blocks.
 - **Rewards**: Distributed proportionally to stake at the end of each epoch (e.g., every 1000 blocks).
 
 ## 8. Governance
-BYCON employs on-chain governance for protocol upgrades and ecosystem fund allocation.
+BYCONN employs on-chain governance for protocol upgrades and ecosystem fund allocation.
 - **Proposals**: Any address can submit a proposal by locking a minimum deposit of 1,000 BYC.
 - **Voting**: 1 BYC staked = 1 Vote.
 - **Thresholds**: Requires a quorum of 40% of all staked BYC and a >50% majority approval to pass.
@@ -68,7 +68,7 @@ Based on EIP-1559 mechanics:
 - **Computation Accounting**: Standard EVM opcodes and gas costs apply.
 
 ## 10. Smart Contracts
-BYCON features full Ethereum Virtual Machine (EVM) compatibility.
+BYCONN features full Ethereum Virtual Machine (EVM) compatibility.
 - Existing Solidity and Vyper contracts can be deployed without modification.
 - Accesses state through the same trie structures used in Ethereum.
 - Standard Web3 RPC endpoints are supported for seamless integration with tools like MetaMask, Hardhat, and Foundry.

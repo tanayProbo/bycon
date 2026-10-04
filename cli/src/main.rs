@@ -1,4 +1,4 @@
-//! BYCON CLI — wallet generation and node status.
+//! BYCONN CLI — wallet generation and node status.
 use std::process;
 use secp256k1::Secp256k1;
 use tiny_keccak::{Hasher, Keccak};
@@ -8,8 +8,8 @@ fn keccak256(data: &[u8]) -> [u8; 32] {
 }
 
 fn help() {
-    println!("BYCON CLI v{}", env!("CARGO_PKG_VERSION"));
-    println!("USAGE: bycon-cli <COMMAND>");
+    println!("BYCONN CLI v{}", env!("CARGO_PKG_VERSION"));
+    println!("USAGE: byconn-cli <COMMAND>");
     println!("  wallet new              Generate a new key pair");
     println!("  wallet address <key>    Derive address from hex secret key");
     println!("  node status             Print node status");
@@ -21,7 +21,7 @@ fn cmd_wallet_new() {
     let (sk, pk) = secp.generate_keypair(&mut rand::thread_rng());
     let raw = pk.serialize_uncompressed();
     let hash = keccak256(&raw[1..]);
-    println!("New BYCON wallet generated");
+    println!("New BYCONN wallet generated");
     println!("  Address : 0x{}", hex::encode(&hash[12..]));
     println!("  Secret  : 0x{}", hex::encode(sk.secret_bytes()));
     println!("Keep your secret key safe!");
@@ -41,21 +41,21 @@ fn cmd_wallet_address(key: &str) {
 }
 
 fn cmd_node_status() {
-    println!("BYCON Node Status");
-    println!("  Chain : BYCON mainnet (chain-id 1)");
+    println!("BYCONN Node Status");
+    println!("  Chain : BYCONN mainnet (chain-id 1)");
     println!("  Sync  : idle");
     println!("  Peers : 0");
-    println!("Run `bycon-node` to start the full node.");
+    println!("Run `byconn-node` to start the full node.");
 }
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     match args.get(1).map(String::as_str) {
-        Some("version") => println!("bycon-cli {}", env!("CARGO_PKG_VERSION")),
+        Some("version") => println!("byconn-cli {}", env!("CARGO_PKG_VERSION")),
         Some("help") | Some("--help") | Some("-h") | None => help(),
         Some("node") => match args.get(2).map(String::as_str) {
             Some("status") => cmd_node_status(),
-            _ => { eprintln!("usage: bycon-cli node status"); process::exit(1); }
+            _ => { eprintln!("usage: byconn-cli node status"); process::exit(1); }
         },
         Some("wallet") => match args.get(2).map(String::as_str) {
             Some("new") => cmd_wallet_new(),
@@ -63,7 +63,7 @@ fn main() {
                 let k = args.get(3).unwrap_or_else(|| { eprintln!("usage: wallet address <key>"); process::exit(1); });
                 cmd_wallet_address(k);
             }
-            _ => { eprintln!("usage: bycon-cli wallet <new|address>"); process::exit(1); }
+            _ => { eprintln!("usage: byconn-cli wallet <new|address>"); process::exit(1); }
         },
         Some(u) => { eprintln!("unknown command: {}", u); process::exit(1); }
     }

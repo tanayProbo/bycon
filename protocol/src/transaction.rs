@@ -78,6 +78,15 @@ impl Transaction {
         Ok(())
     }
 
+    /// Calculate the canonical hash of the signed transaction.
+    ///
+    /// This is `keccak256(RLP(full_tx))` — it includes the signature fields
+    /// (v, r, s) and therefore uniquely identifies a submitted transaction.
+    /// Do NOT confuse with `hash_for_signing()`, which excludes the signature.
+    pub fn tx_hash(&self) -> Hash {
+        keccak256(&rlp::encode(self))
+    }
+
     /// Recover the sender address from the signature.
     pub fn recover_sender(&self) -> Result<Address, secp256k1::Error> {
         let (chain_id, rec_id_val) = if self.v >= 35 {

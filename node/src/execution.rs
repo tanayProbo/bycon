@@ -89,16 +89,24 @@ impl<'a> ExecutionEngine<'a> {
         sender_acc.balance -= tx.value;
         self.state.put_account(&sender, &sender_acc)?;
 
+        let mut contract_address: Option<Address> = None;
+
         if let Some(to) = tx.to {
+            // Simple value transfer to an EOA or contract call
             let mut recipient_acc = self.state.get_account(&to)?;
             recipient_acc.balance += tx.value;
             self.state.put_account(&to, &recipient_acc)?;
+
+            // If calldata is provided, forward to EVM (Phase 3: execute contract)
+            if !tx.data.is_empty() {
+                let evm = Evm::new(self.state);
+                evm.execute_contract(&sender, tx.nonce, Some(&to), &tx.data)?;
+            }
         } else {
-        let mut contract_address = None;
-        if !tx.data.is_empty() || tx.to.is_none() {
+            // Contract creation (tx.to == None)
             let evm = Evm::new(self.state);
-            contract_address = evm.execute_contract(&sender, tx.to.as_ref(), &tx.data)?;
-        }
+            // Pass tx.nonce (before increment) for deterministic CREATE address derivation
+            contract_address = evm.execute_contract(&sender, tx.nonce, None, &tx.data)?;
         }
 
         // 7. Gas refunds and miner reward
@@ -122,11 +130,11 @@ impl<'a> ExecutionEngine<'a> {
 
         // 8. Generate Receipt
         let receipt = Receipt::success(
-            tx.hash_for_signing(None), // placeholder for actual tx hash
+            tx.tx_hash(), // canonical hash = keccak256(RLP(full_signed_tx))
             gas_used,
             cumulative_gas_used + gas_used,
             vec![],
-            None,
+            contract_address,
             tx.gas_price,
         );
 

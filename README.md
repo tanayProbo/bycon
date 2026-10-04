@@ -1,4 +1,4 @@
-# BYCON Blockchain
+# BYCONN Blockchain
 
 > A from-scratch, Ethereum-inspired blockchain node built in Rust. Implements Proof-of-Work mining, secp256k1 ECDSA transaction signing (EIP-155), a binary Merkle tree for block commitments, a sled-backed world-state database, an in-memory mempool, BFT consensus scaffolding, a JSON-RPC server, and a standalone wallet binary.
 
@@ -43,7 +43,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        BYCON Node                           │
+│                        BYCONN Node                           │
 │                                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌───────────┐  │
 │  │  Miner   │  │Consensus │  │   Sync   │  │  JSON-RPC │  │
@@ -78,7 +78,7 @@ All shared types live in `protocol/`. The `node/` binary links against it and ru
 ## Workspace Layout
 
 ```
-bycon/
+byconn/
 ├── Cargo.toml          # Workspace root — members: protocol, node, wallet, cli
 ├── protocol/           # Shared types, crypto primitives, encoding
 │   └── src/
@@ -123,7 +123,7 @@ bycon/
 
 **File:** `protocol/src/hash.rs`
 
-Every hash in BYCON is a **Keccak-256** digest, exactly as in Ethereum.
+Every hash in BYCONN is a **Keccak-256** digest, exactly as in Ethereum.
 
 ```rust
 pub type Hash = H256;   // 32-byte big-endian value
@@ -369,7 +369,7 @@ SECONDARY:  nonce ASC         (correct execution order per sender)
 
 **File:** `node/src/execution.rs`
 
-The core of BYCON's state transition function. Executes one transaction atomically:
+The core of BYCONN's state transition function. Executes one transaction atomically:
 
 #### Step-by-step execution
 
@@ -540,7 +540,7 @@ cargo run -p wallet
 
 Output:
 ```
-BYCON Wallet
+BYCONN Wallet
   Address : 0x<20-byte-hex>
   Secret  : 0x<32-byte-hex>
 
@@ -645,8 +645,8 @@ All `U256` arithmetic in the execution engine uses **saturating operations** —
 
 ```bash
 # Clone the repo
-git clone https://github.com/<your-org>/bycon
-cd bycon
+git clone https://github.com/<your-org>/byconn
+cd byconn
 
 # Build everything
 cargo build
@@ -690,7 +690,7 @@ curl -s -X POST http://localhost:8545 \
 3. GitHub provisions a full dev environment with Rust pre-installed. Run `cargo build` immediately.
 
 ### Option 2: Gitpod
-Prefix the repo URL: `https://gitpod.io/#https://github.com/<org>/bycon`
+Prefix the repo URL: `https://gitpod.io/#https://github.com/<org>/byconn`
 
 ### Option 3: Replit
 Go to [Replit](https://replit.com/) → **Create Repl** → **Import from GitHub** → paste the URL → choose Rust template.

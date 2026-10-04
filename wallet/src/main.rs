@@ -1,4 +1,4 @@
-//! BYCON Wallet — secp256k1 key management and EIP-155 transaction signing.
+//! BYCONN Wallet — secp256k1 key management and EIP-155 transaction signing.
 use protocol::transaction::{Address, Transaction};
 use secp256k1::{Secp256k1, SecretKey, PublicKey};
 use ethereum_types::U256;
@@ -45,7 +45,7 @@ fn keccak256(data: &[u8]) -> [u8; 32] {
 fn main() {
     let wallet = Wallet::generate();
     let secret_hex = hex::encode(wallet.secret_bytes());
-    println!("BYCON Wallet");
+    println!("BYCONN Wallet");
     println!("  Address : 0x{:x}", wallet.address);
     println!("  Secret  : 0x{}", secret_hex);
     println!();
