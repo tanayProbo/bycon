@@ -11,6 +11,8 @@ const BASE_TX_GAS: u64 = 21_000;
 pub enum ExecutionError {
     #[error("State error: {0}")]
     State(#[from] StateError),
+    #[error("EVM error: {0}")]
+    Evm(#[from] crate::evm::EvmError),
     #[error("Signature error: {0}")]
     Signature(#[from] secp256k1::Error),
     #[error("Invalid nonce: expected {expected}, got {got}")]

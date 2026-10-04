@@ -11,6 +11,8 @@ pub enum StateError {
 }
 
 const ACCOUNT_PREFIX: &[u8] = b"acct_";
+const STORAGE_PREFIX: &[u8] = b"stor_";
+const CODE_PREFIX: &[u8] = b"code_";
 
 pub struct StateDb { db: Db }
 
@@ -47,6 +49,84 @@ impl StateDb {
         acc.nonce += 1;
         self.put_account(addr, &acc)?;
         Ok(acc.nonce)
+    }
+
+    pub fn state_root(&self) -> Result<protocol::hash::Hash, StateError> {
+        let mut mpt = protocol::mpt::Mpt::new();
+        for item in self.db.scan_prefix(ACCOUNT_PREFIX) {
+            let (k, v) = item?;
+            let addr_bytes = &k[ACCOUNT_PREFIX.len()..];
+            let key_hash = protocol::hash::keccak256(addr_bytes);
+            mpt.insert(key_hash.as_bytes(), &v);
+        }
+        Ok(mpt.root())
+    }
+
+    fn storage_key(addr: &Address, key: &protocol::hash::Hash) -> Vec<u8> {
+        let mut k = STORAGE_PREFIX.to_vec();
+        k.extend_from_slice(addr.as_bytes());
+        k.extend_from_slice(key.as_bytes());
+        k
+    }
+
+    fn storage_prefix(addr: &Address) -> Vec<u8> {
+        let mut p = STORAGE_PREFIX.to_vec();
+        p.extend_from_slice(addr.as_bytes());
+        p
+    }
+
+    pub fn set_storage(&self, addr: &Address, key: protocol::hash::Hash, value: protocol::hash::Hash) -> Result<(), StateError> {
+        self.db.insert(Self::storage_key(addr, &key), value.as_bytes())?;
+        
+        let root = self.compute_storage_root(addr)?;
+        let mut acc = self.get_account(addr)?;
+        acc.storage_root = root;
+        self.put_account(addr, &acc)?;
+        Ok(())
+    }
+
+    pub fn get_storage(&self, addr: &Address, key: protocol::hash::Hash) -> Result<protocol::hash::Hash, StateError> {
+        match self.db.get(Self::storage_key(addr, &key))? {
+            Some(b) => Ok(protocol::hash::Hash::from_slice(&b)),
+            None => Ok(protocol::hash::Hash::zero()),
+        }
+    }
+
+    fn compute_storage_root(&self, addr: &Address) -> Result<protocol::hash::Hash, StateError> {
+        let mut mpt = protocol::mpt::Mpt::new();
+        let prefix = Self::storage_prefix(addr);
+        for item in self.db.scan_prefix(&prefix) {
+            let (k, v) = item?;
+            let key_hash_bytes = &k[prefix.len()..];
+            let trie_key = protocol::hash::keccak256(key_hash_bytes);
+            mpt.insert(trie_key.as_bytes(), &v);
+        }
+        Ok(mpt.root())
+    }
+
+    fn code_key(hash: &protocol::hash::Hash) -> Vec<u8> {
+        let mut k = CODE_PREFIX.to_vec();
+        k.extend_from_slice(hash.as_bytes());
+        k
+    }
+
+    pub fn set_code(&self, addr: &Address, code: &[u8]) -> Result<(), StateError> {
+        let hash = protocol::hash::keccak256(code);
+        self.db.insert(Self::code_key(&hash), code)?;
+        let mut acc = self.get_account(addr)?;
+        acc.code_hash = hash;
+        self.put_account(addr, &acc)?;
+        Ok(())
+    }
+
+    pub fn get_code(&self, hash: &protocol::hash::Hash) -> Result<Vec<u8>, StateError> {
+        if hash == &protocol::account::EMPTY_CODE_HASH {
+            return Ok(Vec::new());
+        }
+        match self.db.get(Self::code_key(hash))? {
+            Some(b) => Ok(b.to_vec()),
+            None => Ok(Vec::new()),
+        }
     }
 
     pub fn flush(&self) -> Result<(), StateError> { self.db.flush()?; Ok(()) }

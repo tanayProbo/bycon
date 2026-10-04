@@ -78,11 +78,13 @@ impl Miner {
         let transactions_root = compute_transactions_root(&txs);
         let receipts_root = compute_receipts_root(&receipts);
 
+        let state_root = state_db.state_root().unwrap_or(Hash::zero());
+
         let mut header = BlockHeader {
             parent_hash,
             number: latest_height + 1,
             nonce: 0,
-            state_root: Hash::zero(), // TODO: MPT State root in future phase
+            state_root,
             transactions_root,
             receipts_root,
             timestamp: std::time::SystemTime::now()
