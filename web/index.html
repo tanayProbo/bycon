@@ -379,7 +379,7 @@ BYCONN_COINBASE=0xYOUR_WALLET_ADDRESS cargo run --release --bin node</pre>
       <div class="tape"></div>
       <p>Point this box at your running node (<code>http://127.0.0.1:8545</code>) to check rich people's balances or broadcast transactions!</p>
       <div class="row">
-        <input id="rpcUrl" value="http://127.0.0.1:8545" placeholder="http://127.0.0.1:8545" />
+        <input id="rpcUrl" value="https://didactic-space-goldfish-qvq4997wq76c9q67-8545.app.github.dev" placeholder="https://didactic-space-goldfish-qvq4997wq76c9q67-8545.app.github.dev" />
         <button class="btn btn-blue" onclick="refreshStats()">Connect!</button>
       </div>
     </div>
@@ -493,7 +493,7 @@ BYCONN_COINBASE=0xYOUR_WALLET_ADDRESS cargo run --release --bin node</pre>
         alert('Install MetaMask first so we can scribble BYCONN into it!');
         return;
       }
-      const rpcUrl = document.getElementById('rpcUrl').value.trim() || 'http://127.0.0.1:8545';
+      const rpcUrl = document.getElementById('rpcUrl').value.trim() || 'https://didactic-space-goldfish-qvq4997wq76c9q67-8545.app.github.dev';
       await window.ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [{
