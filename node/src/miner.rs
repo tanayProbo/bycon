@@ -48,11 +48,6 @@ impl Miner {
         let mut mempool = self.mempool.lock().await;
         let state_db = self.state_db.lock().await;
         
-        // Skip mining if mempool is empty to save CPU for demo
-        if mempool.is_empty() {
-            return;
-        }
-
         let latest_height = chain.latest_height().unwrap_or(0);
         let parent_hash = chain.head().map(|b| b.hash()).unwrap_or(Hash::zero());
 
@@ -74,11 +69,7 @@ impl Miner {
             }
         }
 
-        if txs.is_empty() {
-            return; // No valid txs to mine
-        }
-
-        // Credit PoW block reward to the miner's coinbase account
+        // Credit PoW block reward (3 BYC) to the miner's coinbase account
         if let Ok(mut miner_acc) = state_db.get_account(&self.coinbase) {
             miner_acc.balance = miner_acc.balance.saturating_add(U256::from(BLOCK_REWARD_WEI));
             let _ = state_db.put_account(&self.coinbase, &miner_acc);
