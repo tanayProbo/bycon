@@ -18,11 +18,25 @@ Thumbs.db
 # Logs
 *.log
 
-# Environment / secrets
+# Environment / secrets / wallet private keys (NEVER commit)
 .env
+.env.*
 *.pem
 *.key
+*.secret
+*.seed
+*.mnemonic
+founder-wallet.txt
+*wallet*.txt
+*wallet*.json
 secrets/
+private/
+
+# Local blockchain databases & installers
+node/db/
+**/db/
+*.db
+rustup-init.exe
 
 # Build artifacts
 *.o

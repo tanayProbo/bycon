@@ -3,3 +3,11 @@ target/
 node/db/
 node/db/chain
 node/db/state
+founder-wallet.txt
+*wallet*.txt
+*.key
+*.pem
+*.secret
+.env
+.env.*
+rustup-init.exe

@@ -1,0 +1,9 @@
+# BYCONN Protocol Code Owners
+# All changes to consensus, monetary policy, treasury rewards, and CI require founder (@tanayProbo) review.
+* @tanayProbo
+/protocol/ @tanayProbo
+/node/ @tanayProbo
+/wallet/ @tanayProbo
+/cli/ @tanayProbo
+/.github/ @tanayProbo
+/scripts/ @tanayProbo
