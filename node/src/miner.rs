@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use std::time::Duration;
-use tokio::sync::Mutex;
+use tokio::sync::{mpsc::UnboundedSender, Mutex};
 use tracing::info;
 
 use protocol::block::{Block, BlockHeader};
@@ -22,6 +22,7 @@ pub struct Miner {
     mempool: Arc<Mutex<Mempool>>,
     state_db: Arc<Mutex<StateDb>>,
     coinbase: Address,
+    block_tx: Option<UnboundedSender<Block>>,
 }
 
 impl Miner {
@@ -30,8 +31,9 @@ impl Miner {
         mempool: Arc<Mutex<Mempool>>,
         state_db: Arc<Mutex<StateDb>>,
         coinbase: Address,
+        block_tx: Option<UnboundedSender<Block>>,
     ) -> Self {
-        Self { chain, mempool, state_db, coinbase }
+        Self { chain, mempool, state_db, coinbase, block_tx }
     }
 
     pub async fn start(&self) {
@@ -108,6 +110,9 @@ impl Miner {
 
         if let Ok(()) = chain.append_block(&new_block) {
             info!("Mined block {} (nonce: {}) -> hash: {:?}", new_block.header.number, new_block.header.nonce, new_block.hash().as_bytes());
+            if let Some(tx) = &self.block_tx {
+                let _ = tx.send(new_block);
+            }
         }
     }
 }

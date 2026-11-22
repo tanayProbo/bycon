@@ -77,11 +77,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap_or_else(|| Address::from_low_u64_be(1));
     info!(coinbase = %format!("0x{:x}", coinbase), "Miner coinbase configured");
 
+    let (block_tx, block_rx) = tokio::sync::mpsc::unbounded_channel();
+
     let miner = miner::Miner::new(
         blockchain.clone(),
         mempool.clone(),
         state_db.clone(),
         coinbase,
+        Some(block_tx),
     );
 
     // ── JSON-RPC Server ──────────────────────────────────────────────────────
@@ -98,11 +101,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         miner.start().await;
     });
 
-    // P2P network — spawned as a non-blocking background task.
-    // Previously this was `.await`-ed directly in main(), which caused main()
-    // to block forever inside the infinite sleep loop in network::start_p2p().
-    tokio::spawn(async {
-        if let Err(e) = network::start_p2p().await {
+    // Global P2P network — broadcasts local mined blocks and accepts remote blocks
+    let p2p_chain = blockchain.clone();
+    let p2p_state = state_db.clone();
+    tokio::spawn(async move {
+        if let Err(e) = network::start_p2p(p2p_chain, p2p_state, block_rx).await {
             error!("P2P network error: {}", e);
         }
     });

@@ -256,8 +256,9 @@ pub async fn start_server(
     mempool: Arc<Mutex<Mempool>>,
     state: Arc<Mutex<StateDb>>,
 ) -> Result<SocketAddr, Box<dyn std::error::Error>> {
+    let bind_addr = std::env::var("BYCONN_RPC_ADDR").unwrap_or_else(|_| "0.0.0.0:8545".to_string());
     let server = ServerBuilder::default()
-        .build("127.0.0.1:8545")
+        .build(&bind_addr)
         .await?;
 
     let addr = server.local_addr()?;
