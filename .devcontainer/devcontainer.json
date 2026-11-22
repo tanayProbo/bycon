@@ -1,0 +1,19 @@
+{
+  "name": "BYCONN Global Seed Node & Miner",
+  "image": "mcr.microsoft.com/devcontainers/rust:1-1-bullseye",
+  "forwardPorts": [8545, 30303],
+  "portsAttributes": {
+    "8545": {
+      "label": "BYCONN Public JSON-RPC",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    },
+    "30303": {
+      "label": "BYCONN Global P2P Swarm",
+      "onAutoForward": "silent",
+      "visibility": "public"
+    }
+  },
+  "postCreateCommand": "cargo build --release --workspace",
+  "postStartCommand": "bash scripts/start-seed.sh"
+}
