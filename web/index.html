@@ -70,7 +70,7 @@
       </div>
       <div class="rpc-bar">
         <span id="statusBadge" class="badge err">Disconnected</span>
-        <input id="rpcUrl" value="https://rpc.bycon.xyz" style="width:210px" />
+        <input id="rpcUrl" value="https://rpc.bycbycon.xyz" style="width:210px" />
         <button onclick="refreshStats()">Connect</button>
         <button onclick="addToMetaMask()">Add to MetaMask</button>
       </div>
@@ -235,7 +235,7 @@ cargo run --release --bin byconn-cli -- wallet new</pre>
         alert('MetaMask not detected. Install MetaMask to add BYCONN.');
         return;
       }
-      const rpcUrl = document.getElementById('rpcUrl').value.trim() || 'https://rpc.bycon.xyz';
+      const rpcUrl = document.getElementById('rpcUrl').value.trim() || 'https://rpc.bycbycon.xyz';
       try {
         await window.ethereum.request({
           method: 'wallet_addEthereumChain',
@@ -244,7 +244,7 @@ cargo run --release --bin byconn-cli -- wallet new</pre>
             chainName: 'BYCONN Mainnet',
             nativeCurrency: { name: 'BYCONN', symbol: 'BYC', decimals: 18 },
             rpcUrls: [rpcUrl],
-            blockExplorerUrls: ['https://bycon.xyz']
+            blockExplorerUrls: ['https://bycbycon.xyz']
           }]
         });
       } catch (e) {
