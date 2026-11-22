@@ -9,8 +9,8 @@ use protocol::transaction::Address;
 use protocol::trie::{compute_transactions_root, compute_receipts_root};
 use ethereum_types::U256;
 
-/// Block mining reward: 50 BYC (50 * 10^18 wei).
-const BLOCK_REWARD_WEI: u128 = 50_000_000_000_000_000_000;
+/// Block mining reward: 3 BYC (3 * 10^18 wei).
+const BLOCK_REWARD_WEI: u128 = 3_000_000_000_000_000_000;
 
 use crate::chain::Blockchain;
 use crate::mempool::Mempool;
@@ -105,11 +105,12 @@ impl Miner {
         };
 
         // Rigor: Proof of Work Loop
-        // We require 2 leading zero hex digits (1 byte of zero) for demo speed.
+        // Target: 20 leading zero bits (5 leading zero hex digits: 0x00000...).
         info!("Mining block {} with {} txs...", header.number, txs.len());
         loop {
             let hash = header.hash();
-            if hash.as_bytes()[0] == 0 { // Target: 1 leading zero byte
+            let b = hash.as_bytes();
+            if b[0] == 0 && b[1] == 0 && (b[2] & 0xF0) == 0 {
                 break;
             }
             header.nonce += 1;

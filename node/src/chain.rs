@@ -67,7 +67,8 @@ impl Blockchain {
         // PoW check (skip for genesis block at height 0)
         if block.header.number > 0 {
             let hash = block.hash();
-            if hash.as_bytes()[0] != 0 {
+            let b = hash.as_bytes();
+            if b[0] != 0 || b[1] != 0 || (b[2] & 0xF0) != 0 {
                 return Err(ChainError::InvalidPoW);
             }
         }
