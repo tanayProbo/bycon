@@ -95,15 +95,9 @@ impl Miner {
             proposer: self.coinbase,
         };
 
-        // Rigor: Proof of Work Loop
-        // Target: 20 leading zero bits (5 leading zero hex digits: 0x00000...).
+        // Rigor: Layered Ethash-inspired Proof of Work Loop
         info!("Mining block {} with {} txs...", header.number, txs.len());
-        loop {
-            let hash = header.hash();
-            let b = hash.as_bytes();
-            if b[0] == 0 && b[1] == 0 && (b[2] & 0xF0) == 0 {
-                break;
-            }
+        while !header.meets_pow_target() {
             header.nonce += 1;
         }
 

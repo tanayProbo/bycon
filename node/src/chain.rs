@@ -64,11 +64,9 @@ impl Blockchain {
     /// transaction hash → (block_height, tx_index) secondary index so that
     /// transactions can be retrieved in O(1) by their canonical hash.
     pub fn append_block(&self, block: &Block) -> Result<(), ChainError> {
-        // PoW check (skip for genesis block at height 0)
+        // Layered PoW check (skip for genesis block at height 0)
         if block.header.number > 0 {
-            let hash = block.hash();
-            let b = hash.as_bytes();
-            if b[0] != 0 || b[1] != 0 || (b[2] & 0xF0) != 0 {
+            if !block.header.meets_pow_target() {
                 return Err(ChainError::InvalidPoW);
             }
         }
