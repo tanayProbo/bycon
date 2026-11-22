@@ -18,8 +18,9 @@ hex = "0.4.3"
 libp2p = { version = "0.52", features = ["tokio", "gossipsub", "mdns", "noise", "yamux", "tcp", "macros"] }
 ethereum-types = "0.14"
 rlp = "0.5"
-secp256k1 = "0.27"
+secp256k1 = { version = "0.27", features = ["rand-std"] }
 futures = "0.3"
 
 [dev-dependencies]
 tokio = { version = "1.28", features = ["full"] }
+rand = "0.8"
