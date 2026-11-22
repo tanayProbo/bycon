@@ -3,383 +3,424 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BYCONN (BYC) — Open-Source Layer-1 Proof-of-Work Blockchain</title>
+  <title>BYCONN (BYC) — Scribbled Layer-1 Crypto!!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Patrick+Hand&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #050811;
-      --bg2: #0b1120;
-      --card: rgba(17, 25, 45, 0.78);
-      --border: rgba(99, 130, 202, 0.22);
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --cyan: #38bdf8;
-      --indigo: #818cf8;
-      --purple: #c084fc;
-      --green: #34d399;
+      --paper: #fffef9;
+      --ink: #1b1b1b;
+      --pencil: #4a4a4a;
+      --crayon-red: #ff3b30;
+      --crayon-blue: #007aff;
+      --crayon-yellow: #ffe600;
+      --crayon-green: #28cd41;
+      --crayon-purple: #af52de;
+      --line-blue: rgba(110, 175, 255, 0.32);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
-      background: radial-gradient(circle at 50% 0%, #131c38 0%, var(--bg) 55%);
-      color: var(--text);
-      line-height: 1.6;
+      font-family: 'Patrick Hand', 'Comic Sans MS', cursive;
+      background-color: var(--paper);
+      /* Notebook ruled lines + red left margin line */
+      background-image:
+        linear-gradient(90deg, transparent 58px, rgba(255, 59, 48, 0.45) 58px, rgba(255, 59, 48, 0.45) 60px, transparent 60px),
+        repeating-linear-gradient(var(--paper) 0px, var(--paper) 31px, var(--line-blue) 32px);
+      color: var(--ink);
+      font-size: 1.25rem;
+      line-height: 1.5;
+      padding: 20px 20px 80px 76px;
+      overflow-x: hidden;
     }
-    a { color: inherit; text-decoration: none; }
-    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    h1, h2, h3, .brand {
+      font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+    }
+    a { color: var(--crayon-blue); text-decoration: underline wavy var(--crayon-red); }
+    .container { max-width: 1020px; margin: 0 auto; }
+
+    /* Wobbly hand-drawn border helper */
+    .sketch-box {
+      background: #ffffff;
+      border: 3px solid var(--ink);
+      border-radius: 255px 18px 225px 18px / 18px 225px 18px 255px;
+      box-shadow: 5px 6px 0px var(--ink);
+      padding: 22px;
+      position: relative;
+    }
+    .tilt-left { transform: rotate(-1.2deg); }
+    .tilt-right { transform: rotate(1.1deg); }
+
+    /* Highlighter scribbles */
+    .hl-yellow {
+      background: linear-gradient(104deg, rgba(255,230,0,0) 0.9%, rgba(255,230,0,0.85) 2.4%, rgba(255,230,0,0.6) 5.8%, rgba(255,230,0,0.9) 93%, rgba(255,230,0,0.7) 96%, rgba(255,230,0,0) 98%);
+      padding: 0 8px;
+      border-radius: 6px;
+    }
+    .hl-pink {
+      background: rgba(255, 105, 180, 0.32);
+      padding: 0 8px;
+      border-radius: 6px;
+    }
+    .hl-green {
+      background: rgba(40, 205, 65, 0.28);
+      padding: 0 8px;
+      border-radius: 6px;
+    }
+
+    /* Sticky tape on top of boxes */
+    .tape {
+      position: absolute;
+      top: -14px; left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+      width: 110px; height: 26px;
+      background: rgba(255, 235, 150, 0.55);
+      border: 1px dashed rgba(0,0,0,0.2);
+    }
 
     /* Navbar */
     nav {
-      position: sticky; top: 0; z-index: 50;
-      backdrop-filter: blur(14px);
-      background: rgba(5, 8, 17, 0.8);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 72px; gap: 16px;
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 14px; padding: 14px 20px; margin-bottom: 32px;
     }
     .brand {
-      display: flex; align-items: center; gap: 10px;
-      font-weight: 800; font-size: 1.25rem; letter-spacing: 0.04em;
+      font-size: 1.9rem; font-weight: 900; color: var(--ink);
+      text-decoration: none; display: flex; align-items: center; gap: 10px;
+      transform: rotate(-2deg);
     }
-    .brand-icon {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--cyan), var(--indigo), var(--purple));
-      display: grid; place-items: center; font-weight: 900; color: #050811;
-    }
-    .nav-links { display: flex; gap: 28px; color: var(--muted); font-size: 0.92rem; font-weight: 500; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 20px; font-size: 1.3rem; font-weight: 700; }
 
-    /* Buttons */
+    /* Scribble buttons */
     .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 0.92rem;
-      cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
+      font-family: 'Gloria Hallelujah', cursive;
+      font-size: 1.05rem;
+      display: inline-block;
+      padding: 8px 18px;
+      background: var(--crayon-yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      border-radius: 255px 25px 225px 25px / 25px 225px 25px 255px;
+      box-shadow: 4px 4px 0px var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.1s;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--cyan), var(--indigo));
-      color: #050811;
-      box-shadow: 0 8px 25px -6px rgba(56, 189, 248, 0.45);
-    }
-    .btn-primary:hover { transform: translateY(-1px); opacity: 0.95; }
-    .btn-outline {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text);
-      border-color: var(--border);
-    }
-    .btn-outline:hover { border-color: var(--cyan); background: rgba(56, 189, 248, 0.08); }
+    .btn:hover { transform: scale(1.04) rotate(-2deg); }
+    .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px var(--ink); }
+    .btn-blue { background: #80d4ff; }
+    .btn-pink { background: #ff9ebb; }
+    .btn-white { background: #fff; }
 
-    /* Hero */
+    /* Hero section */
     .hero {
-      padding: 96px 0 72px;
       text-align: center;
-    }
-    .pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 14px; border-radius: 999px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: var(--cyan); font-size: 0.82rem; font-weight: 600;
-      margin-bottom: 24px;
+      padding: 24px 10px 44px;
+      position: relative;
     }
     .hero h1 {
-      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-      font-weight: 800; line-height: 1.12;
-      max-width: 900px; margin: 0 auto 22px;
-      letter-spacing: -0.02em;
-    }
-    .gradient-text {
-      background: linear-gradient(90deg, var(--cyan), var(--indigo), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-size: clamp(2.3rem, 5vw, 3.8rem);
+      line-height: 1.2;
+      margin-bottom: 16px;
+      transform: rotate(-1deg);
     }
     .hero p {
-      color: var(--muted); font-size: 1.15rem;
-      max-width: 680px; margin: 0 auto 36px;
+      font-size: 1.45rem;
+      max-width: 720px;
+      margin: 0 auto 26px;
+      color: var(--pencil);
     }
-    .hero-ctas {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 14px;
-      margin-bottom: 64px;
+    .hero-doodles {
+      display: flex; justify-content: center; align-items: center; gap: 28px;
+      flex-wrap: wrap; margin: 22px 0 32px;
     }
 
-    /* Stats bar */
-    .stats-bar {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 16px; padding: 24px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 18px;
+    /* Grids */
+    .grid-4 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px; margin: 32px 0;
     }
-    .stat-item { text-align: center; padding: 8px; }
-    .stat-num { font-size: 1.75rem; font-weight: 800; color: var(--text); }
-    .stat-lbl { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+    .grid-2 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 26px; margin: 32px 0;
+    }
+    .grid-3 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; margin: 32px 0;
+    }
 
-    /* Sections */
-    section { padding: 76px 0; border-top: 1px solid rgba(99, 130, 202, 0.12); }
-    .section-head { text-align: center; max-width: 680px; margin: 0 auto 48px; }
-    .section-tag { color: var(--cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
-    .section-head h2 { font-size: 2.1rem; font-weight: 800; margin: 8px 0 12px; }
-    .section-head p { color: var(--muted); }
+    .section-title {
+      font-size: 2.2rem;
+      text-align: center;
+      margin: 54px 0 18px;
+      transform: rotate(-1deg);
+    }
 
-    .cards-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
+    /* Code scribble block */
+    pre {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+      background: #f4f1ea;
+      border: 2px dashed var(--ink);
+      border-radius: 14px;
+      padding: 14px;
+      overflow-x: auto;
+      line-height: 1.6;
     }
-    .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 26px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .card:hover { border-color: rgba(56, 189, 248, 0.45); transform: translateY(-2px); }
-    .card-icon {
-      width: 42px; height: 42px; border-radius: 10px;
-      background: rgba(56, 189, 248, 0.12); color: var(--cyan);
-      display: grid; place-items: center; font-weight: 800; margin-bottom: 16px;
-    }
-    .card h3 { font-size: 1.15rem; margin-bottom: 8px; }
-    .card p { color: var(--muted); font-size: 0.93rem; }
 
-    /* Terminal / Mining guide */
-    .split {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 28px; align-items: center;
+    input {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.15rem;
+      width: 100%;
+      padding: 8px 12px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
     }
-    .terminal {
-      background: #04070e; border: 1px solid var(--border);
-      border-radius: 14px; overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
-    .term-bar {
-      background: #0d1424; padding: 10px 16px;
-      display: flex; align-items: center; gap: 8px;
-      border-bottom: 1px solid var(--border); font-size: 0.8rem; color: var(--muted);
-    }
-    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-    .terminal pre {
-      padding: 20px; font-family: 'JetBrains Mono', Consolas, monospace;
-      font-size: 0.84rem; color: #e2e8f0; overflow-x: auto; line-height: 1.7;
-    }
-    .c-comment { color: #64748b; }
-    .c-cmd { color: var(--cyan); }
-    .c-ok { color: var(--green); }
+    .row { display: flex; gap: 10px; margin: 10px 0; }
 
-    /* Explorer tools */
-    .tool-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-      gap: 20px;
-    }
-    .input-row { display: flex; gap: 8px; margin: 12px 0; }
-    input, textarea {
-      width: 100%; background: #060a14; color: var(--text);
-      border: 1px solid var(--border); border-radius: 10px;
-      padding: 10px 12px; font-size: 0.9rem; font-family: inherit;
-    }
-    input:focus, textarea:focus { outline: none; border-color: var(--cyan); }
-    .out-box {
-      background: #050811; border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px; font-family: Consolas, monospace;
-      font-size: 0.8rem; color: #cbd5e1; max-height: 220px; overflow: auto;
+    .margin-note {
+      font-family: 'Gloria Hallelujah', cursive;
+      color: var(--crayon-red);
+      font-size: 0.95rem;
+      transform: rotate(-5deg);
+      display: inline-block;
     }
 
     footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 0; text-align: center; color: var(--muted); font-size: 0.88rem;
+      margin-top: 64px;
+      text-align: center;
+      font-size: 1.2rem;
+      border-top: 3px dashed var(--ink);
+      padding-top: 28px;
     }
-    @media (max-width: 760px) {
-      .nav-links { display: none; }
+    @media (max-width: 680px) {
+      body { padding-left: 20px; background-image: repeating-linear-gradient(var(--paper) 0px, var(--paper) 31px, var(--line-blue) 32px); }
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div class="container nav-inner">
+  <div class="container">
+    <!-- Top Scribbled Nav -->
+    <nav class="sketch-box tilt-left">
+      <div class="tape"></div>
       <a href="#" class="brand">
-        <span class="brand-icon">B</span>
-        <span>BYCONN</span>
+        <!-- Hand-drawn coin SVG -->
+        <svg width="46" height="46" viewBox="0 0 60 60" fill="none">
+          <path d="M30 4C45 3 56 14 55 30C54 46 43 56 28 55C13 54 4 43 5 28C6 13 15 5 30 4Z" fill="#ffe600" stroke="#1b1b1b" stroke-width="3.5" stroke-linecap="round"/>
+          <text x="20" y="40" font-family="Gloria Hallelujah, cursive" font-size="28" font-weight="bold" fill="#1b1b1b">B</text>
+        </svg>
+        <span>BYCONN!!</span>
       </a>
       <div class="nav-links">
-        <a href="#features">Technology</a>
-        <a href="#mining">Start Mining</a>
-        <a href="#tokenomics">Tokenomics</a>
-        <a href="#explorer">Explorer</a>
+        <a href="#what">What is it?!</a>
+        <a href="#mine">How 2 Mine</a>
+        <a href="#math">Secret Math</a>
+        <a href="#explorer">Block Pokey</a>
       </div>
-      <div class="nav-actions">
-        <button class="btn btn-outline" onclick="addToMetaMask()">+ MetaMask</button>
-        <a class="btn btn-primary" href="https://github.com/tanayProbo/bycon/releases/tag/v0.1.0" target="_blank">Download v0.1.0</a>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-blue" onclick="addToMetaMask()">+ Put in MetaMask!</button>
+        <a class="btn" href="https://github.com/tanayProbo/bycon/releases/tag/v0.1.0" target="_blank">Get v0.1.0 ★</a>
+      </div>
+    </nav>
+
+    <!-- Hero Scribble -->
+    <header class="hero">
+      <span class="margin-note">★ Homework: build a real Layer-1 blockchain in Rust!! (A+ 100%) ★</span>
+      <h1>
+        The <span class="hl-yellow">Open-Source</span> Crypto Where Anyone Can <span class="hl-pink">Mine 3 BYC</span>!!
+      </h1>
+      <p>
+        No big banks! No boring suits! Just pure Rust code, <strong>8-round layered Keccak-256 Proof-of-Work</strong>,
+        EVM smart contracts, and <strong>3 BYC</strong> every time your computer solves a block!
+      </p>
+
+      <!-- Hand-drawn stick-figure miner & arrows SVG -->
+      <div class="hero-doodles">
+        <svg width="320" height="135" viewBox="0 0 320 135" fill="none">
+          <!-- Stick figure miner -->
+          <circle cx="55" cy="32" r="16" stroke="#1b1b1b" stroke-width="3.5" fill="#fff"/>
+          <circle cx="50" cy="29" r="2.5" fill="#1b1b1b"/>
+          <circle cx="61" cy="29" r="2.5" fill="#1b1b1b"/>
+          <path d="M48 38 Q55 45 62 38" stroke="#1b1b1b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Miner helmet -->
+          <path d="M36 24 Q55 6 74 24 Z" fill="#ffe600" stroke="#1b1b1b" stroke-width="3"/>
+          <!-- Body & legs -->
+          <line x1="55" y1="48" x2="55" y2="95" stroke="#1b1b1b" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="55" y1="95" x2="38" y2="125" stroke="#1b1b1b" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="55" y1="95" x2="72" y2="125" stroke="#1b1b1b" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Arms holding pickaxe -->
+          <line x1="55" y1="64" x2="92" y2="48" stroke="#1b1b1b" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Pickaxe -->
+          <line x1="80" y1="72" x2="112" y2="25" stroke="#8b5a2b" stroke-width="4" stroke-linecap="round"/>
+          <path d="M95 18 Q115 22 126 38" stroke="#1b1b1b" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <!-- Sparkles & block -->
+          <text x="130" y="45" font-family="Gloria Hallelujah" font-size="16" fill="#ff3b30">*CLINK!*</text>
+          <rect x="195" y="38" width="90" height="75" rx="8" fill="#80d4ff" stroke="#1b1b1b" stroke-width="3.5"/>
+          <text x="208" y="72" font-family="Gloria Hallelujah" font-size="18" fill="#1b1b1b">BLOCK</text>
+          <text x="208" y="96" font-family="Gloria Hallelujah" font-size="19" font-weight="bold" fill="#1b1b1b">+3 BYC!</text>
+        </svg>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+        <a href="#mine" class="btn">⛏ Start Mining Now!!</a>
+        <a href="https://github.com/tanayProbo/bycon" target="_blank" class="btn btn-pink">★ Steal the Code (GitHub)</a>
+        <a href="#explorer" class="btn btn-white">🔍 Poke the Blockchain</a>
+      </div>
+    </header>
+
+    <!-- 4 Quick Scribble Stats -->
+    <div class="grid-4">
+      <div class="sketch-box tilt-left" style="background:#fff9c4;text-align:center;">
+        <div class="margin-note">woohoo!!</div>
+        <h2 style="font-size:2.1rem;">3 BYC</h2>
+        <p>Reward for every single block you mine!</p>
+      </div>
+      <div class="sketch-box tilt-right" style="background:#e1f5fe;text-align:center;">
+        <div class="margin-note">super hard!</div>
+        <h2 style="font-size:2.1rem;">8 Layers</h2>
+        <p>Keccak-256 mix-hash (20 leading zero bits!)</p>
+      </div>
+      <div class="sketch-box tilt-left" style="background:#f3e5f5;text-align:center;">
+        <div class="margin-note">no faking!</div>
+        <h2 style="font-size:2.1rem;">EIP-155</h2>
+        <p>Real Ethereum secp256k1 signatures &amp; nonces</p>
+      </div>
+      <div class="sketch-box tilt-right" style="background:#e8f5e9;text-align:center;">
+        <div class="margin-note" id="liveStatus">Chain ID = 1</div>
+        <h2 style="font-size:2.1rem;" id="liveTip">Mainnet</h2>
+        <p>Works with MetaMask &amp; JSON-RPC :8545</p>
       </div>
     </div>
-  </nav>
 
-  <header class="hero container">
-    <div class="pill">⚡ Mainnet v0.1.0 Live · Open-Source Layer-1 in Rust</div>
-    <h1>The Decentralized <span class="gradient-text">Proof-of-Work</span> Blockchain Built for Speed &amp; Rigor</h1>
-    <p>
-      BYCONN combines Bitcoin's permissionless Proof-of-Work issuance with Ethereum's EVM execution model,
-      EIP-155 transaction security, and 8-round layered Keccak-256 mining.
-    </p>
-    <div class="hero-ctas">
-      <a href="#mining" class="btn btn-primary">Start Mining (3 BYC / Block)</a>
-      <a href="https://github.com/tanayProbo/bycon" target="_blank" class="btn btn-outline">View GitHub Source</a>
-      <a href="#explorer" class="btn btn-outline">Open Block Explorer</a>
-    </div>
-
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-num">3 BYC</div>
-        <div class="stat-lbl">Block Mining Reward</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">8-Round</div>
-        <div class="stat-lbl">Layered Keccak PoW</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">EIP-155</div>
-        <div class="stat-lbl">Secp256k1 ECDSA</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num" id="liveTip">Chain ID 1</div>
-        <div class="stat-lbl" id="liveStatus">BYCONN Mainnet</div>
-      </div>
-    </div>
-  </header>
-
-  <section id="features" class="container">
-    <div class="section-head">
-      <div class="section-tag">Core Protocol</div>
-      <h2>Engineered From Scratch in Rust</h2>
-      <p>Every layer — from cryptographic primitives and Merkle tries to P2P gossip and EVM opcodes — is open-source and verifiable.</p>
-    </div>
-
-    <div class="cards-grid">
-      <div class="card">
-        <div class="card-icon">⛏</div>
-        <h3>Layered Ethash-Inspired PoW</h3>
-        <p>Blocks require an 8-round sequential Keccak-256 mix-hash meeting a 20-bit leading-zero difficulty target, rewarding miners 3 BYC per block.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3>EVM &amp; JSON-RPC 2.0</h3>
-        <p>Stack-based bytecode execution engine with standard <code>eth_*</code> JSON-RPC endpoints compatible with MetaMask, curl, and Web3 tooling.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔐</div>
-        <h3>Secp256k1 &amp; Merkle Commitments</h3>
-        <p>EIP-155 replay-protected signatures and binary Merkle root commitments for state, transactions, and receipts in every block header.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🌐</div>
-        <h3>Libp2p Swarm &amp; BFT Finality</h3>
-        <p>Decentralized peer discovery via mDNS &amp; Gossipsub paired with a 2/3+ validator quorum BFT finality state machine.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="mining" class="container">
-    <div class="split">
-      <div>
-        <div class="section-tag">Permissionless Mining</div>
-        <h2 style="font-size:2rem;font-weight:800;margin:8px 0 14px;">Mine BYC on Any Machine in 60 Seconds</h2>
-        <p style="color:var(--muted);margin-bottom:18px;">
-          Anyone can join the BYCONN network, generate a non-custodial secp256k1 wallet, and run a full PoW mining node.
-          Every block your node mines credits <strong>3 BYC</strong> directly to your coinbase address.
+    <!-- What is it section -->
+    <h2 id="what" class="section-title">✎ Why We Drew This Blockchain (Protocol Stuff)</h2>
+    <div class="grid-2">
+      <div class="sketch-box tilt-left">
+        <div class="tape"></div>
+        <h3>1. Bitcoin-Style Continuous Mining ⛏</h3>
+        <p>
+          Even if nobody is sending transactions, the miner keeps chugging and making new blocks!
+          Set your wallet in <code>BYCONN_COINBASE</code> and collect <span class="hl-yellow">3 BYC</span> per block!
         </p>
-        <ul style="color:var(--muted);list-style:none;display:grid;gap:10px;margin-bottom:24px;">
-          <li>✔ Continuous Bitcoin-style block production</li>
-          <li>✔ Zero pre-mine lockups — 100% open-source MIT license</li>
-          <li>✔ Standalone CLI &amp; Wallet binaries included</li>
-        </ul>
-        <a href="https://github.com/tanayProbo/bycon/releases/tag/v0.1.0" target="_blank" class="btn btn-primary">Get BYCONN v0.1.0</a>
       </div>
 
-      <div class="terminal">
-        <div class="term-bar">
-          <span class="dot" style="background:#ef4444"></span>
-          <span class="dot" style="background:#f59e0b"></span>
-          <span class="dot" style="background:#10b981"></span>
-          <span>bash — byconn-node</span>
+      <div class="sketch-box tilt-right">
+        <div class="tape"></div>
+        <h3>2. Layered Ethash-Inspired Math 🧮</h3>
+        <p>
+          We don't just hash once! Every nonce runs through <strong>8 sequential rounds</strong> of
+          <code>keccak256(mix || parent_hash || nonce || round)</code> before checking for <code>0x00000...</code>!
+        </p>
+      </div>
+
+      <div class="sketch-box tilt-right">
+        <div class="tape"></div>
+        <h3>3. Real EVM + Merkle Trees 🌳</h3>
+        <p>
+          Every block header commits to a cryptographic <code>state_root</code>, <code>transactions_root</code>,
+          and <code>receipts_root</code> stored in an embedded <code>sled</code> database.
+        </p>
+      </div>
+
+      <div class="sketch-box tilt-left">
+        <div class="tape"></div>
+        <h3>4. Libp2p Gossip + BFT Quorum 📡</h3>
+        <p>
+          Nodes find friends automatically with mDNS + Gossipsub and can finalize blocks with a
+          <span class="hl-green">2/3+ validator quorum</span> state machine!
+        </p>
+      </div>
+    </div>
+
+    <!-- How to Mine Doodle Guide -->
+    <h2 id="mine" class="section-title">★ How 2 Mine BYC on Your Laptop in 60 Seconds ★</h2>
+    <div class="sketch-box tilt-left" style="background:#fffdf2;">
+      <div class="tape"></div>
+      <p style="margin-bottom:12px;">
+        Open your terminal, copy-paste these 3 scribbled spells, and watch the blocks roll in:
+      </p>
+      <pre># Step 1: Grab the open-source code
+git clone https://github.com/tanayProbo/bycon.git
+cd bycon
+
+# Step 2: Make your secret wallet key &amp; address (DON'T LOSE IT!!)
+cargo run --release --bin byconn-cli -- wallet new
+
+# Step 3: Start the node &amp; miner (earns 3 BYC per block!)
+BYCONN_COINBASE=0xYOUR_WALLET_ADDRESS cargo run --release --bin node</pre>
+      <p style="margin-top:12px;">
+        <span class="margin-note">← Pssst! Want to send a transaction? Run:</span>
+        <code>cargo run --release --bin byconn-wallet</code>
+      </p>
+    </div>
+
+    <!-- Secret Math & Tokenomics -->
+    <h2 id="math" class="section-title">📐 The Secret Math &amp; Tokenomics</h2>
+    <div class="grid-3">
+      <div class="sketch-box tilt-right">
+        <h3>Coin Name: <span class="hl-yellow">BYC</span></h3>
+        <p>1 BYC = <code>1,000,000,000,000,000,000</code> wei (18 zeroes, just like ETH!).</p>
+      </div>
+      <div class="sketch-box tilt-left">
+        <h3>Block Reward: <span class="hl-pink">3 BYC</span></h3>
+        <p>Minted fresh out of thin air to whoever solves the 20-bit PoW puzzle first!</p>
+      </div>
+      <div class="sketch-box tilt-right">
+        <h3>License: <span class="hl-green">100% MIT</span></h3>
+        <p>Fork it, mine it, build apps on it — completely open-source forever.</p>
+      </div>
+    </div>
+
+    <!-- Live Block Explorer ("Block Pokey") -->
+    <h2 id="explorer" class="section-title">🔍 The "Block Pokey" Machine (Live Explorer)</h2>
+    <div class="sketch-box tilt-right" style="margin-bottom:24px;">
+      <div class="tape"></div>
+      <p>Point this box at your running node (<code>http://127.0.0.1:8545</code>) to check rich people's balances or broadcast transactions!</p>
+      <div class="row">
+        <input id="rpcUrl" value="http://127.0.0.1:8545" placeholder="http://127.0.0.1:8545" />
+        <button class="btn btn-blue" onclick="refreshStats()">Connect!</button>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="sketch-box tilt-left">
+        <h3>💰 Check Wallet Bag</h3>
+        <div class="row">
+          <input id="addrInput" placeholder="0x0000...0001" />
+          <button class="btn" onclick="checkAccount()">Peek</button>
         </div>
-        <pre><span class="c-comment"># 1. Clone &amp; generate your BYC wallet</span>
-<span class="c-cmd">git clone https://github.com/tanayProbo/bycon.git &amp;&amp; cd bycon</span>
-<span class="c-cmd">cargo run --release --bin byconn-cli -- wallet new</span>
-<span class="c-ok">Address : 0x71C...89A</span>
-
-<span class="c-comment"># 2. Start mining blocks (3 BYC reward per block)</span>
-<span class="c-cmd">BYCONN_COINBASE=0xYOUR_ADDRESS cargo run --release --bin node</span>
-<span class="c-ok">INFO BYCONN Node Starting...</span>
-<span class="c-ok">INFO Miner task started with PoW enabled (3 BYC/block)</span></pre>
-      </div>
-    </div>
-  </section>
-
-  <section id="tokenomics" class="container">
-    <div class="section-head">
-      <div class="section-tag">Economics</div>
-      <h2>BYC Tokenomics &amp; Specifications</h2>
-      <p>Transparent, deterministic protocol rules enforced by every node on the network.</p>
-    </div>
-    <div class="cards-grid">
-      <div class="card">
-        <h3>Ticker &amp; Precision</h3>
-        <p><strong>BYC</strong> · 18 decimals (<code>1 BYC = 10^18 wei</code>), matching standard Ethereum denomination.</p>
-      </div>
-      <div class="card">
-        <h3>Issuance Model</h3>
-        <p><strong>3 BYC</strong> minted per Proof-of-Work block directly to the winning miner's <code>BYCONN_COINBASE</code> account.</p>
-      </div>
-      <div class="card">
-        <h3>Fee Market</h3>
-        <p>Base transfer cost of <code>21,000 gas</code> with dynamic transaction fee priority ordering in the mempool.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="explorer" class="container">
-    <div class="section-head">
-      <div class="section-tag">Live RPC Console</div>
-      <h2>BYCONN Block Explorer &amp; Node Inspector</h2>
-      <p>Connect to your local node (<code>http://127.0.0.1:8545</code>) or a public RPC endpoint to query balances, blocks, and broadcast signed transactions.</p>
-    </div>
-
-    <div style="display:flex;gap:10px;max-width:520px;margin:0 auto 28px;">
-      <input id="rpcUrl" value="http://127.0.0.1:8545" placeholder="RPC URL (e.g. http://127.0.0.1:8545)" />
-      <button class="btn btn-primary" onclick="refreshStats()">Connect RPC</button>
-    </div>
-
-    <div class="tool-grid">
-      <div class="card">
-        <h3>Wallet Balance &amp; Nonce</h3>
-        <div class="input-row">
-          <input id="addrInput" placeholder="0x0000000000000000000000000000000000000001" />
-          <button class="btn btn-outline" onclick="checkAccount()">Query</button>
-        </div>
-        <pre class="out-box" id="accountOut">Enter a 20-byte BYC address to check balance.</pre>
+        <pre id="accountOut">Type a 0x address above and click Peek!</pre>
       </div>
 
-      <div class="card">
-        <h3>Inspect Block</h3>
-        <div class="input-row">
+      <div class="sketch-box tilt-right">
+        <h3>📦 Inspect a Block</h3>
+        <div class="row">
           <input id="blockInput" value="latest" placeholder="latest or 0x0" />
-          <button class="btn btn-outline" onclick="fetchBlock()">Fetch</button>
+          <button class="btn btn-pink" onclick="fetchBlock()">Open</button>
         </div>
-        <pre class="out-box" id="blockOut">Query any block by number or "latest".</pre>
+        <pre id="blockOut">Click Open to see what's inside the latest block!</pre>
       </div>
 
-      <div class="card">
-        <h3>Broadcast Signed Transaction</h3>
-        <div class="input-row">
-          <input id="rawTxInput" placeholder="0x... (signed RLP hex from byconn-wallet)" />
-          <button class="btn btn-outline" onclick="sendRawTx()">Send</button>
+      <div class="sketch-box tilt-left">
+        <h3>🚀 Shoot a Signed Tx</h3>
+        <div class="row">
+          <input id="rawTxInput" placeholder="0x... RLP hex" />
+          <button class="btn btn-blue" onclick="sendRawTx()">Yeet!</button>
         </div>
-        <pre class="out-box" id="txOut">Paste RLP-encoded signed transaction hex to broadcast.</pre>
+        <pre id="txOut">Paste signed tx hex from byconn-wallet &amp; click Yeet!</pre>
       </div>
     </div>
-  </section>
 
-  <footer>
-    <div class="container">
-      <p><strong>BYCONN Blockchain</strong> · Open-Source under the MIT License · <a href="https://github.com/tanayProbo/bycon" style="color:var(--cyan)">GitHub</a> · <a href="https://github.com/tanayProbo/bycon/releases" style="color:var(--cyan)">Releases</a></p>
-    </div>
-  </footer>
+    <footer>
+      <p>
+        Drawn with crayons &amp; Rust 🦀 · <strong>BYCONN Blockchain (v0.1.0)</strong> ·
+        <a href="https://github.com/tanayProbo/bycon" target="_blank">GitHub Repo</a> ·
+        <a href="https://github.com/tanayProbo/bycon/releases/tag/v0.1.0" target="_blank">Download Release</a>
+      </p>
+    </footer>
+  </div>
 
   <script>
     let rpcId = 1;
@@ -399,10 +440,10 @@
       try {
         const heightHex = await rpc('eth_blockNumber');
         document.getElementById('liveTip').textContent = 'Block #' + parseInt(heightHex, 16);
-        document.getElementById('liveStatus').textContent = '● Node Connected';
+        document.getElementById('liveStatus').textContent = '★ Node Connected!!';
       } catch (_) {
-        document.getElementById('liveTip').textContent = 'Chain ID 1';
-        document.getElementById('liveStatus').textContent = 'BYCONN Mainnet';
+        document.getElementById('liveTip').textContent = 'Mainnet';
+        document.getElementById('liveStatus').textContent = 'Chain ID = 1';
       }
     }
 
@@ -421,7 +462,7 @@
           nonce: parseInt(nonceHex, 16)
         }, null, 2);
       } catch (e) {
-        out.textContent = 'RPC Error: ' + e.message;
+        out.textContent = 'Oops! ' + e.message;
       }
     }
 
@@ -432,7 +473,7 @@
         const block = await rpc('eth_getBlockByNumber', [param, true]);
         out.textContent = JSON.stringify(block, null, 2);
       } catch (e) {
-        out.textContent = 'RPC Error: ' + e.message;
+        out.textContent = 'Oops! ' + e.message;
       }
     }
 
@@ -441,18 +482,18 @@
       const out = document.getElementById('txOut');
       try {
         const hash = await rpc('eth_sendRawTransaction', [raw]);
-        out.textContent = 'Tx Broadcasted!\nHash: ' + hash;
+        out.textContent = 'YEETED!! Tx Hash:\n' + hash;
       } catch (e) {
-        out.textContent = 'RPC Error: ' + e.message;
+        out.textContent = 'Oops! ' + e.message;
       }
     }
 
     async function addToMetaMask() {
       if (!window.ethereum) {
-        alert('Install MetaMask to add BYCONN Mainnet.');
+        alert('Install MetaMask first so we can scribble BYCONN into it!');
         return;
       }
-      const rpcUrl = document.getElementById('rpcUrl').value.trim() || 'https://rpc.bycbycon.xyz';
+      const rpcUrl = document.getElementById('rpcUrl').value.trim() || 'http://127.0.0.1:8545';
       await window.ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [{
