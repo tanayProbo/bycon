@@ -3,14 +3,11 @@ use std::time::Duration;
 use tokio::sync::{mpsc::UnboundedSender, Mutex};
 use tracing::info;
 
-use protocol::block::{Block, BlockHeader};
+use protocol::block::{Block, BlockHeader, TARGET_BLOCK_TIME_SECS};
 use protocol::hash::Hash;
 use protocol::transaction::Address;
 use protocol::trie::{compute_transactions_root, compute_receipts_root};
 use ethereum_types::U256;
-
-/// Block mining reward: 3 BYC (3 * 10^18 wei).
-const BLOCK_REWARD_WEI: u128 = 3_000_000_000_000_000_000;
 
 use crate::chain::Blockchain;
 use crate::mempool::Mempool;
@@ -71,10 +68,19 @@ impl Miner {
             }
         }
 
-        // Credit PoW block reward (3 BYC) to the miner's coinbase account
+        let next_number = latest_height + 1;
+        let total_reward = BlockHeader::block_reward_wei(next_number);
+        let founder_reward = total_reward / 10; // 10% protocol treasury reward
+        let miner_reward = total_reward - founder_reward; // 90% miner reward
+
         if let Ok(mut miner_acc) = state_db.get_account(&self.coinbase) {
-            miner_acc.balance = miner_acc.balance.saturating_add(U256::from(BLOCK_REWARD_WEI));
+            miner_acc.balance = miner_acc.balance.saturating_add(U256::from(miner_reward));
             let _ = state_db.put_account(&self.coinbase, &miner_acc);
+        }
+        let founder_addr = Address::from_low_u64_be(1);
+        if let Ok(mut founder_acc) = state_db.get_account(&founder_addr) {
+            founder_acc.balance = founder_acc.balance.saturating_add(U256::from(founder_reward));
+            let _ = state_db.put_account(&founder_addr, &founder_acc);
         }
 
         // Rigor: Calculate actual Merkle Roots
@@ -97,8 +103,12 @@ impl Miner {
             proposer: self.coinbase,
         };
 
-        // Rigor: Layered Ethash-inspired Proof of Work Loop
-        info!("Mining block {} with {} txs...", header.number, txs.len());
+        // Enforce 3-hour (10,800s) target block cadence + escalating 34+ bit layered PoW
+        let req_bits = BlockHeader::required_zero_bits(header.number);
+        info!(
+            "Mining block #{} ({} txs, difficulty: {} zero bits, target interval: {}s / 3h)...",
+            header.number, txs.len(), req_bits, TARGET_BLOCK_TIME_SECS
+        );
         while !header.meets_pow_target() {
             header.nonce += 1;
         }

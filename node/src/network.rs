@@ -19,13 +19,12 @@ use std::time::Duration;
 use tokio::sync::{mpsc::UnboundedReceiver, Mutex};
 use tracing::{info, warn};
 
-use protocol::block::Block;
+use protocol::block::{Block, BlockHeader};
+use protocol::transaction::Address;
 use crate::chain::Blockchain;
 use crate::state::StateDb;
 use crate::execution::ExecutionEngine;
 use ethereum_types::U256;
-
-const BLOCK_REWARD_WEI: u128 = 3_000_000_000_000_000_000;
 
 #[derive(NetworkBehaviour)]
 struct ByconnBehaviour {
@@ -141,9 +140,17 @@ pub async fn start_p2p(
                                     cumulative_gas += r.gas_used;
                                 }
                             }
+                            let total_reward = BlockHeader::block_reward_wei(remote_block.header.number);
+                            let founder_reward = total_reward / 10;
+                            let miner_reward = total_reward - founder_reward;
                             if let Ok(mut proposer_acc) = state_guard.get_account(&remote_block.header.proposer) {
-                                proposer_acc.balance = proposer_acc.balance.saturating_add(U256::from(BLOCK_REWARD_WEI));
+                                proposer_acc.balance = proposer_acc.balance.saturating_add(U256::from(miner_reward));
                                 let _ = state_guard.put_account(&remote_block.header.proposer, &proposer_acc);
+                            }
+                            let founder_addr = Address::from_low_u64_be(1);
+                            if let Ok(mut founder_acc) = state_guard.get_account(&founder_addr) {
+                                founder_acc.balance = founder_acc.balance.saturating_add(U256::from(founder_reward));
+                                let _ = state_guard.put_account(&founder_addr, &founder_acc);
                             }
                             if chain_guard.append_block(&remote_block).is_ok() {
                                 info!("Accepted global block #{} from peer {}", remote_block.header.number, peer_id);
