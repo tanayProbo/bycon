@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BYCONN — Ecosystem Dashboard & Block Explorer</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #131a2b;
+      --border: #23304d;
+      --text: #e6edf7;
+      --muted: #8fa1c4;
+      --accent: #38bdf8;
+      --accent2: #818cf8;
+      --ok: #34d399;
+      --err: #f87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px;
+    }
+    h1 { font-size: 1.6rem; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .rpc-bar { display: flex; gap: 8px; align-items: center; }
+    input, textarea, button {
+      background: #0e1422; color: var(--text); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px; font-size: 0.9rem; font-family: inherit;
+    }
+    input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    button {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #06101d; font-weight: 600; border: none; cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px;
+    }
+    .stat-label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-value { font-size: 1.4rem; font-weight: 700; margin-top: 6px; word-break: break-all; }
+    .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    h2 { font-size: 1.05rem; margin-bottom: 12px; color: var(--accent); }
+    .row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .row input { flex: 1; }
+    pre {
+      background: #080c14; border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; font-size: 0.8rem; overflow-x: auto; max-height: 280px; color: #cbd5e1;
+    }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+    .badge.ok { background: rgba(52,211,153,0.15); color: var(--ok); }
+    .badge.err { background: rgba(248,113,113,0.15); color: var(--err); }
+    code { background: #080c14; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>BYCONN Ecosystem Dashboard</h1>
+        <div style="color:var(--muted);font-size:0.85rem;">Open-Source Layer-1 Blockchain Explorer, Wallet &amp; Node Admin</div>
+      </div>
+      <div class="rpc-bar">
+        <span id="statusBadge" class="badge err">Disconnected</span>
+        <input id="rpcUrl" value="http://127.0.0.1:8545" style="width:210px" />
+        <button onclick="refreshStats()">Connect</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <div class="stat-label">Latest Block Height</div>
+        <div class="stat-value" id="blockHeight">—</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Suggested Gas Price</div>
+        <div class="stat-value" id="gasPrice">—</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Block Reward</div>
+        <div class="stat-value">50 BYC</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Chain ID</div>
+        <div class="stat-value">1 (Mainnet)</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h2>Wallet Balance &amp; Nonce</h2>
+        <div class="row">
+          <input id="addrInput" placeholder="0x0000000000000000000000000000000000000001" />
+          <button onclick="checkAccount()">Check</button>
+        </div>
+        <pre id="accountOut">Enter a 20-byte hex address to query eth_getBalance &amp; eth_getTransactionCount.</pre>
+      </div>
+
+      <div class="card">
+        <h2>Block Explorer</h2>
+        <div class="row">
+          <input id="blockInput" value="latest" placeholder="latest or hex block number (e.g. 0x0)" />
+          <button onclick="fetchBlock()">Inspect</button>
+        </div>
+        <pre id="blockOut">Click Inspect to fetch a block via eth_getBlockByNumber.</pre>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h2>Broadcast Signed Transaction</h2>
+        <textarea id="rawTxInput" rows="3" style="width:100%;margin-bottom:10px;" placeholder="0x... (RLP-encoded signed tx from byconn-wallet)"></textarea>
+        <button onclick="sendRawTx()">Send Raw Transaction</button>
+        <pre id="txOut" style="margin-top:10px;">Generate a signed tx with `byconn-wallet` and paste the RLP hex above.</pre>
+      </div>
+
+      <div class="card">
+        <h2>Transaction Lookup</h2>
+        <div class="row">
+          <input id="txHashInput" placeholder="0x... (32-byte transaction hash)" />
+          <button onclick="lookupTx()">Lookup</button>
+        </div>
+        <pre id="txLookupOut">Enter a transaction hash to query eth_getTransactionByHash.</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Node &amp; Miner Quick Commands</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:8px;">
+        Start a mining node with your own coinbase wallet address:
+      </p>
+      <pre>BYCONN_COINBASE=0xYOUR_WALLET_ADDRESS cargo run --release --bin node</pre>
+      <p style="color:var(--muted);font-size:0.9rem;margin:10px 0 8px;">
+        Generate a new wallet &amp; signed transaction:
+      </p>
+      <pre>cargo run --release --bin byconn-wallet
+cargo run --release --bin byconn-cli -- wallet new</pre>
+    </div>
+  </div>
+
+  <script>
+    let rpcId = 1;
+    async function rpc(method, params = []) {
+      const url = document.getElementById('rpcUrl').value.trim();
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: '2.0', id: rpcId++, method, params })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+      return data.result;
+    }
+
+    async function refreshStats() {
+      const badge = document.getElementById('statusBadge');
+      try {
+        const heightHex = await rpc('eth_blockNumber');
+        const gasHex = await rpc('eth_gasPrice');
+        document.getElementById('blockHeight').textContent = parseInt(heightHex, 16).toString();
+        document.getElementById('gasPrice').textContent = BigInt(gasHex).toString() + ' wei';
+        badge.textContent = 'Connected';
+        badge.className = 'badge ok';
+      } catch (e) {
+        badge.textContent = 'Disconnected';
+        badge.className = 'badge err';
+      }
+    }
+
+    async function checkAccount() {
+      const addr = document.getElementById('addrInput').value.trim();
+      const out = document.getElementById('accountOut');
+      try {
+        const [balHex, nonceHex] = await Promise.all([
+          rpc('eth_getBalance', [addr, 'latest']),
+          rpc('eth_getTransactionCount', [addr, 'latest'])
+        ]);
+        const wei = BigInt(balHex);
+        const byc = Number(wei) / 1e18;
+        out.textContent = JSON.stringify({
+          address: addr,
+          balance_byc: byc.toFixed(6) + ' BYC',
+          balance_wei: wei.toString(),
+          nonce: parseInt(nonceHex, 16)
+        }, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function fetchBlock() {
+      const param = document.getElementById('blockInput').value.trim() || 'latest';
+      const out = document.getElementById('blockOut');
+      try {
+        const block = await rpc('eth_getBlockByNumber', [param, true]);
+        out.textContent = JSON.stringify(block, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function sendRawTx() {
+      const raw = document.getElementById('rawTxInput').value.trim();
+      const out = document.getElementById('txOut');
+      try {
+        const hash = await rpc('eth_sendRawTransaction', [raw]);
+        out.textContent = 'Submitted! Tx Hash:\n' + hash;
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function lookupTx() {
+      const hash = document.getElementById('txHashInput').value.trim();
+      const out = document.getElementById('txLookupOut');
+      try {
+        const tx = await rpc('eth_getTransactionByHash', [hash]);
+        out.textContent = JSON.stringify(tx, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    refreshStats();
+    setInterval(refreshStats, 5000);
+  </script>
+</body>
+</html>

@@ -69,11 +69,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!(local_tip = sync_manager.local_tip, "Sync manager initialised");
 
     // ── Miner ────────────────────────────────────────────────────────────────
+    let coinbase = std::env::var("BYCONN_COINBASE")
+        .ok()
+        .and_then(|s| hex::decode(s.trim_start_matches("0x")).ok())
+        .filter(|b| b.len() == 20)
+        .map(|b| Address::from_slice(&b))
+        .unwrap_or_else(|| Address::from_low_u64_be(1));
+    info!(coinbase = %format!("0x{:x}", coinbase), "Miner coinbase configured");
+
     let miner = miner::Miner::new(
         blockchain.clone(),
         mempool.clone(),
         state_db.clone(),
-        Address::from_low_u64_be(1), // dummy coinbase — replace with real wallet address
+        coinbase,
     );
 
     // ── JSON-RPC Server ──────────────────────────────────────────────────────

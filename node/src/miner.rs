@@ -7,6 +7,10 @@ use protocol::block::{Block, BlockHeader};
 use protocol::hash::Hash;
 use protocol::transaction::Address;
 use protocol::trie::{compute_transactions_root, compute_receipts_root};
+use ethereum_types::U256;
+
+/// Block mining reward: 50 BYC (50 * 10^18 wei).
+const BLOCK_REWARD_WEI: u128 = 50_000_000_000_000_000_000;
 
 use crate::chain::Blockchain;
 use crate::mempool::Mempool;
@@ -72,6 +76,12 @@ impl Miner {
 
         if txs.is_empty() {
             return; // No valid txs to mine
+        }
+
+        // Credit PoW block reward to the miner's coinbase account
+        if let Ok(mut miner_acc) = state_db.get_account(&self.coinbase) {
+            miner_acc.balance = miner_acc.balance.saturating_add(U256::from(BLOCK_REWARD_WEI));
+            let _ = state_db.put_account(&self.coinbase, &miner_acc);
         }
 
         // Rigor: Calculate actual Merkle Roots
